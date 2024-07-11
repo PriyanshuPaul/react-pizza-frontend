@@ -67,30 +67,36 @@ const Menu = () => {
   return (
     <main className="menu">
       <h2>Our Menu</h2>
-      <ul className="pizzas">
-        {
-          pizzaData.length > 0 && (
-            pizzaData.map((pizza: IPizza) => (
-              <Pizza
-                pizza={pizza}
-              ></Pizza>
-            ))
+      {pizzaData.length > 0 ? (
+        <React.Fragment>
+          <p>Authentic italian cusisine and creative dishes to choose from. All from our store oven.All organic, all fresh and all delicious.</p>
+          <ul className="pizzas">
+            {
+              (
+                pizzaData.map((pizza: IPizza) => (
+                  <Pizza
+                    pizza={pizza}
+                  ></Pizza>
+                ))
+              )}
+          </ul>
+        </React.Fragment>
+      ) : (<p>We are still working on the menu</p>)
+      }
 
-          )}
 
-      </ul>
     </main>
   );
 };
-//{name,ingredients,price,photoName,soldOut}
+
 const Pizza = ({ pizza }: { pizza: IPizza }) => {
   return (
-    <li className="pizza">
+    <li className={`pizza ${pizza.soldOut ? 'sold-out' : null}`}>
       <div>
         <img src={pizza.photoName} alt="PizzaPhoto" />
         <h3>{pizza.name}</h3>
         <p>{pizza.ingredients}</p>
-        <span>{pizza.price}</span>
+        <span>{pizza.soldOut ? 'SOLD OUT' : pizza.price}</span>
       </div>
     </li>
   );
@@ -102,15 +108,19 @@ const Footer = () => {
   const open = hour >= openingHours && hour <= closingHours
   return (
     <footer className="footer">
-      {open && (
-        <div className="order">
-          <p>We are open until {closingHours}:00. Come visit us or order online</p>
-          <button className="btn">Order Now</button>
-        </div>
-      )}
+      {open ? (
+        <Order closingHours={closingHours} />
+      ) : (<p>We are closed now!</p>)}
     </footer>
   );
 };
+
+const Order = ({ closingHours }: { closingHours: number }) => {
+  return (<div className="order">
+    <p>We are open until {closingHours}:00. Come visit us or order online</p>
+    <button className="btn">Order Now</button>
+  </div>)
+}
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
